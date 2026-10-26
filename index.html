@@ -1,0 +1,1206 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<style>
+    body {
+        background-color: #f1f5f9;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 40px 20px;
+        color: #1e293b;
+    }
+    h1 {
+        color: #2563eb;
+        text-align: center;
+    }
+    h2 {
+        margin-top: 30px;
+        color: #334155;
+    }
+    body > h1,
+    body > p,
+    body > h2,
+    body > label,
+    body > input,
+    body > button,
+    body > ul,
+    body > #total {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    input {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        margin-bottom: 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+    button {
+        padding: 10px 16px;
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #1d4ed8;
+    }
+    #total {
+        box-sizing: border-box;
+        background-color: #dbeafe;
+        color: #1d4ed8;
+        padding: 20px;
+        border-radius: 12px;
+        font-size: 22px;
+        font-weight: bold;
+    }
+    #expense-list {
+        padding-left: 20px;
+    }
+    #expense-list li {
+        background-color: white;
+        padding: 14px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px #0000000d;
+    }
+    #expense-list button {
+        margin-left: 12px;
+        background-color: #dc2626;
+    }
+    #expense-list button:hover {
+        background-color: #b91c1c;
+    }
+    select {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: white;
+}
+
+/* Étape 7.2 : présentation des dépenses */
+
+#expense-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#expense-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background-color: white;
+    padding: 18px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px #0f172a0d;
+    border-left: 5px solid #2563eb;
+}
+
+#expense-list button {
+    margin-left: 0;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    #expense-list li {
+        align-items: flex-start;
+    }
+}
+
+/* Étape 7.3 : améliorer le total des dépenses */
+
+#total {
+    max-width: 600px;
+    width: 100%;
+    margin: 24px auto;
+    padding: 22px;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 12px #2563eb12;
+}
+#add-expense,
+#cancel-edit {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+}
+#expense-form-buttons {
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#expense-form-buttons button {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Étape 11.3 : améliorer les cartes du tableau de bord */
+
+#budget-progress-container,
+.statistic-card,
+#statistics-container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.statistic-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px #0f172a0d;
+    border: 1px solid #e2e8f0;
+}
+
+.statistic-card h3 {
+    margin-top: 0;
+    color: #334155;
+}
+
+#statistics-container {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+#statistics-container .statistic-card {
+    flex: 1 1 220px;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    #statistics-container {
+        flex-direction: column;
+    }
+}
+
+body > p.filters-description {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin: 8px auto 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+</style>
+    <meta charset="UTF-8">
+    <title>تطبيق تدبير المصاريف</title>
+    <style>
+    #budget-progress-container {
+        margin-top: 15px;
+        max-width: 500px;
+    }
+
+    #budget-progress-background {
+        width: 100%;
+        height: 18px;
+        background-color: #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #budget-progress-bar {
+        width: 0%;
+        height: 100%;
+        background-color: #22c55e;
+        border-radius: 10px;
+        transition: width 0.4s ease, background-color 0.4s ease;
+    }
+
+    #budget-percentage {
+        font-weight: bold;
+    }
+
+    #budget-alert {
+        font-weight: bold;
+        margin-top: 8px;
+    }
+    
+/* Design moderne - Étape 7 */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+body > h1 {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px #0f172a0d;
+}
+
+body > h2 {
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+body > p,
+body > label,
+body > input,
+body > select,
+body > button,
+body > ul,
+body > #budget-progress-container {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body > p {
+    color: #475569;
+}
+
+input:focus,
+select:focus {
+    outline: 2px solid #93c5fd;
+    border-color: #2563eb;
+}
+
+button {
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+#budget-progress-container {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #0f172a0d;
+}
+
+#budget-info,
+#remaining-budget {
+    font-weight: bold;
+}
+
+#total {
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 16px 12px;
+    }
+
+    body > h1 {
+        padding: 18px 12px;
+        font-size: 25px;
+    }
+
+    body > h2 {
+        font-size: 20px;
+    }
+
+    button {
+        max-width: 100%;
+    }
+
+    #expense-list li {
+        overflow-wrap: anywhere;
+    }
+}
+
+/* Étape 7.4 : adaptation aux petits écrans */
+
+@media (max-width: 600px) {
+    body {
+        padding: 16px 12px;
+    }
+
+    input,
+    select {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+    }
+
+    #budget-progress-container {
+        width: 100%;
+    }
+
+    #total {
+        font-size: 20px;
+        padding: 18px 12px;
+    }
+
+    #expense-list li {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #expense-list button {
+        width: 100%;
+    }
+}
+
+/* Étape 7.5 : interactions des boutons */
+
+button {
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px #0f172a1a;
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+button:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+/* Étape 9.3 : style du bouton de recherche */
+/* Étape 12.9 : présentation des filtres de dates */
+#date-filter-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 18px;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px #0f172a0d;
+}
+/* Étape 12.11 : style du bouton de filtre par date */
+#filter-by-date {
+    background-color: #2563eb;
+    color: white;
+    margin-top: 8px;
+}
+
+#filter-by-date:hover {
+    background-color: #1d4ed8;
+}
+/* Étape 12.10 : améliorer la présentation de la recherche */
+#expense-search {
+    margin-top: 8px;
+}
+
+#search-results-count {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+#clear-search {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 16px;
+    background-color: #64748b;
+}
+/* Étape 12.4 : style des messages de filtrage */
+#filter-results-message {
+    max-width: 600px;
+    margin: 10px auto 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #f1f5f9;
+    font-weight: bold;
+    text-align: center;
+}
+/* Étape 10.3 : style du bouton de réinitialisation */
+#reset-filters {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 16px;
+    background-color: #0f766e;
+}
+
+#reset-filters:hover {
+    background-color: #115e59;
+}
+#clear-search:hover {
+    background-color: #475569;
+}
+/* Étape 12.5 : style du compteur de résultats */
+#search-results-count {
+    max-width: 600px;
+    margin: 15px auto 8px;
+    padding: 10px 14px;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+}
+#export-expenses {
+    background-color: #16a34a;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#export-expenses:hover {
+    background-color: #15803d;
+    transform: translateY(-2px);
+}
+
+#export-expenses:focus-visible {
+    outline: 3px solid #86efac;
+    outline-offset: 3px;
+}
+
+@media print {
+    body {
+        background: white;
+        color: black;
+        padding: 0;
+    }
+
+    button,
+    input,
+    select,
+    form {
+        display: none !important;
+    }
+
+    h1, h2, h3 {
+        color: black;
+    }
+
+    #expense-chart {
+        max-width: 100%;
+    }
+
+    .expense-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
+
+#expense-list li {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#expense-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px #0f172a14;
+}
+
+</style>
+</head>
+<body>
+    <h1>Gestionnaire de dépenses</h1>
+    <p class="app-description">
+    Organisez vos dépenses, suivez votre budget et analysez vos habitudes.
+</p>
+    <p>هذا التطبيق سيساعدني على تنظيم مصاريفي.</p>
+    <h2>Gestion de mes dépenses</h2>
+    <p>je peux noter mes revenus et mes dépenes.</p>
+    <h2>Mon objectif</h2>
+<h2>Ajouter une dépense</h2>
+<label for="expense">Nom de la dépense :</label>
+<input id="expense" type="text" placeholder="Ex : Café">
+<label for="amount">Montant :</label>
+<input id="amount" type="number" placeholder="Ex : 20">
+<label for="expense-date">Date de la dépense :</label>
+<input id="expense-date" type="date">
+<label for="category">Catégorie :</label>
+<select id="category">
+    <option value="Alimentation">Alimentation</option>
+    <option value="Transport">Transport</option>
+    <option value="Logement">Logement</option>
+    <option value="Loisirs">Loisirs</option>
+    <option value="Santé">Santé</option>
+    <option value="Autre">Autre</option>
+</select>
+<div id="expense-form-buttons">
+    <button id="add-expense">Ajouter la dépense</button>
+<button id="export-expenses">Exporter les dépenses</button>
+<button id="print-expenses">Imprimer les dépenses</button>
+    <button id="cancel-edit" style="display: none; background-color: #64748b;">
+        Annuler la modification
+    </button>
+</div>
+  <p>je veux mieux gérer mon argent.</p>
+
+<h2>Mon budget mensuel</h2>
+
+<label for="budget-input">Budget du mois (DH) :</label>
+<input
+    id="budget-input"
+    type="number"
+    min="1"
+    placeholder="Ex : 2000"
+>
+
+<button id="save-budget">Enregistrer le budget</button>
+
+<p id="budget-info">Budget : non défini</p>
+<p id="remaining-budget">Reste : -- DH</p>
+<div id="budget-progress-container">
+    <p id="budget-percentage">Budget consommé : 0%</p>
+
+    <div id="budget-progress-background">
+        <div id="budget-progress-bar"></div>
+    </div>
+
+    <p id="budget-alert"></p>
+</div>
+
+<h2>Mes statistiques</h2>
+
+<div id="statistics-container">
+    <div class="statistic-card">
+        <h3>Nombre de dépenses</h3>
+        <p id="statistics-count">0</p>
+    </div>
+
+    <div class="statistic-card">
+        <h3>Total des dépenses</h3>
+        <p id="statistics-total">0 DH</p>
+    </div>
+</div>
+
+<div class="statistic-card">
+    <h3>Dépenses par catégorie</h3>
+    <ul id="category-statistics"></ul>
+</div>
+
+<div class="statistic-card">
+    <h3>Répartition des dépenses</h3>
+    <canvas id="expense-chart"></canvas>
+</div>
+
+<h2>Mes dépenses</h2>
+<p class="filters-description">
+    Utilisez les filtres ci-dessous pour retrouver facilement vos dépenses.
+</p>
+<div id="date-filter-container">
+    <label for="start-date">Date de début :</label>
+    <input type="date" id="start-date">
+
+    <label for="end-date">Date de fin :</label>
+    <input type="date" id="end-date">
+
+    <button type="button" id="filter-by-date">
+        Filtrer par date
+    </button>
+
+    <button type="button" id="clear-date-filter">
+        Effacer les dates
+    </button>
+</div>
+
+<label for="expense-search">Rechercher une dépense :</label>
+<input
+    id="expense-search"
+    type="text"
+    placeholder="Ex : Café, Transport..."
+>
+<button id="clear-search" type="button">
+    Effacer la recherche
+</button>
+<button id="reset-filters" type="button">
+    Réinitialiser les filtres
+</button>
+<p id="search-results-count">
+    Nombre de résultats : 0
+</p>
+<p id="filter-results-message"></p>
+<label for="category-filter">Filtrer par catégorie :</label>
+<select id="category-filter">
+    <option value="Toutes">Toutes les catégories</option>
+    <option value="Alimentation">Alimentation</option>
+    <option value="Transport">Transport</option>
+    <option value="Logement">Logement</option>
+    <option value="Loisirs">Loisirs</option>
+    <option value="Santé">Santé</option>
+    <option value="Autre">Autre</option>
+</select>
+
+<p id="total">Total : 0 DH</p>
+<ul id="expense-list"></ul> 
+
+<button id="back-to-top" type="button">
+    ↑ Retour en haut
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const expenseInput = document.getElementById("expense");
+    const amountInput = document.getElementById("amount");
+    const categoryInput = document.getElementById("category");
+    const expenseDateInput = document.getElementById("expense-date");
+    const categoryFilter = document.getElementById("category-filter");
+    const searchInput = document.getElementById("expense-search");
+    const clearSearchButton = document.getElementById("clear-search");
+    const resetFiltersButton = document.getElementById("reset-filters");
+    const searchResultsCount = document.getElementById("search-results-count");
+    const filterResultsMessage = document.getElementById("filter-results-message");
+const startDateInput = document.getElementById("start-date");
+const endDateInput = document.getElementById("end-date");
+const filterByDateButton = document.getElementById("filter-by-date");
+const clearDateFilterButton = document.getElementById("clear-date-filter");
+
+    const expenseList = document.getElementById("expense-list");
+    const totalDisplay = document.getElementById("total");
+const budgetInput = document.getElementById("budget-input");
+const saveBudgetButton = document.getElementById("save-budget");
+const budgetInfo = document.getElementById("budget-info");
+const remainingBudget = document.getElementById("remaining-budget");
+const budgetPercentage = document.getElementById("budget-percentage");
+const budgetProgressBar = document.getElementById("budget-progress-bar");
+const budgetAlert = document.getElementById("budget-alert");
+let budget = Number(localStorage.getItem("monthlyBudget")) || 0;
+
+    const addButton = document.getElementById("add-expense");
+const cancelEditButton = document.getElementById("cancel-edit");
+    let expenses = JSON.parse(
+        localStorage.getItem("expenses")
+    ) || [];
+let editingExpense = null;
+   
+let expenseChart = null;
+
+function updateExpenseChart() {
+    const categoryTotals = {};
+
+    expenses.forEach(function (expense) {
+        const category = expense.category || "Autre";
+
+        if (!categoryTotals[category]) {
+            categoryTotals[category] = 0;
+        }
+
+        categoryTotals[category] += Number(expense.amount);
+    });
+
+    const labels = Object.keys(categoryTotals);
+    const values = Object.values(categoryTotals);
+
+    const canvas = document.getElementById("expense-chart");
+
+    if (!canvas || typeof Chart === "undefined") return;
+
+    if (expenseChart) {
+        expenseChart.destroy();
+    }
+
+    expenseChart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+            labels: labels,
+           
+datasets: [{
+    data: values,
+    backgroundColor: [
+        "#3b82f6",
+        "#22c55e",
+        "#f59e0b",
+        "#a855f7",
+        "#ef4444",
+        "#64748b"
+    ],
+    borderWidth: 2,
+    borderColor: "#ffffff"
+}]
+
+        },
+        
+options: {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: "bottom"
+        },
+        tooltip: {
+            callbacks: {
+                
+label: function (context) {
+    const label = context.label || "";
+    const amount = context.parsed;
+
+    const total = context.dataset.data.reduce(
+        function (sum, value) {
+            return sum + Number(value);
+        },
+        0
+    );
+
+    const percentage = total > 0
+        ? (amount / total) * 100
+        : 0;
+
+    return label + " : " +
+        amount.toFixed(2) + " DH (" +
+        percentage.toFixed(1) + "%)";
+}
+
+            }
+        }
+    }
+}
+
+    });
+}
+
+function displayExpenses() {
+    expenseList.innerHTML = "";
+
+    // Le total reste celui de toutes les dépenses
+    let total = 0;
+
+    expenses.forEach(function (expense) {
+        total += Number(expense.amount);
+    });
+updateExpenseChart();
+    totalDisplay.textContent = "Total : " + total + " DH";
+
+    // Mettre à jour les statistiques
+    const statisticsCount = document.getElementById("statistics-count");
+    const statisticsTotal = document.getElementById("statistics-total");
+
+    statisticsCount.textContent = expenses.length;
+    statisticsTotal.textContent = total.toFixed(2) + " DH";
+
+    // Calculer les dépenses par catégorie
+    const categoryStatistics =
+        document.getElementById("category-statistics");
+
+    const categoryTotals = {};
+
+    expenses.forEach(function (expense) {
+        const category = expense.category || "Autre";
+
+        if (!categoryTotals[category]) {
+            categoryTotals[category] = 0;
+        }
+
+        categoryTotals[category] += Number(expense.amount);
+    });
+
+    categoryStatistics.innerHTML = "";
+
+    Object.entries(categoryTotals).forEach(function ([category, amount]) {
+        const item = document.createElement("li");
+
+        item.textContent =
+            category + " : " + amount.toFixed(2) + " DH";
+
+        categoryStatistics.appendChild(item);
+    });
+
+if (budget > 0) {
+    budgetInfo.textContent = "Budget mensuel : " + budget + " DH";
+
+    const remaining = budget - total;
+    remainingBudget.textContent =
+    "Reste : " + remaining.toFixed(2) + " DH";
+
+    const percentage = (total / budget) * 100;
+    const displayedPercentage = Math.min(percentage, 100);
+
+    budgetPercentage.textContent =
+        "Budget consommé : " + percentage.toFixed(1) + "%";
+
+    budgetProgressBar.style.width = displayedPercentage + "%";
+
+    if (percentage >= 100) {
+        budgetProgressBar.style.backgroundColor = "#dc2626";
+        budgetAlert.textContent = "Attention : budget dépassé !";
+        budgetAlert.style.color = "#dc2626";
+    } else if (percentage >= 80) {
+        budgetProgressBar.style.backgroundColor = "#f59e0b";
+        budgetAlert.textContent = "Attention : budget presque épuisé !";
+        budgetAlert.style.color = "#d97706";
+    } else {
+    budgetProgressBar.style.backgroundColor = "#22c55e";
+    budgetAlert.textContent = "Budget sous contrôle.";
+    budgetAlert.style.color = "#16a34a";
+}
+
+} else {
+    budgetInfo.textContent = "Budget : non défini";
+    remainingBudget.textContent = "Reste : -- DH";
+
+    budgetPercentage.textContent = "Budget consommé : 0%";
+    budgetProgressBar.style.width = "0%";
+    budgetProgressBar.style.backgroundColor = "#22c55e";
+    budgetAlert.textContent = "Définissez votre budget mensuel.";
+    budgetAlert.style.color = "";
+}
+
+    // Lire le filtre choisi
+    const selectedCategory = categoryFilter.value;
+const searchTerm = searchInput.value.trim().toLowerCase();
+const startDate = startDateInput.value;
+const endDate = endDateInput.value;
+    // Afficher les dépenses de la catégorie choisie
+    let displayedCount = 0;
+    expenses.forEach(function (expense) {
+        const category = expense.category || "Autre";
+
+       const dateDoesNotMatch =
+    (startDate && (!expense.date || expense.date < startDate)) ||
+    (endDate && (!expense.date || expense.date > endDate));
+
+if (
+    (selectedCategory !== "Toutes" &&
+        category !== selectedCategory) ||
+    !expense.name.toLowerCase().includes(searchTerm) ||
+    dateDoesNotMatch
+) {
+    return;
+}
+        displayedCount++;
+        const item = document.createElement("li");
+        
+
+const expenseDate = expense.date
+    ? expense.date.split("-").reverse().join("/")
+    : "Date non disponible";
+
+
+item.textContent =
+    expense.name + " : " + expense.amount +
+    " DH - " + category +
+    " - Date : " + expenseDate + " ";
+
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Supprimer";
+const editButton = document.createElement("button");
+
+editButton.addEventListener("click", function () {
+    editingExpense = expenses.indexOf(expense);
+
+    expenseInput.value = expense.name;
+    amountInput.value = expense.amount;
+    expenseDateInput.value = expense.date || "";
+    categoryInput.value = expense.category || "Autre";
+
+    addButton.textContent = "Enregistrer les modifications";
+cancelEditButton.style.display = "inline-block";
+    expenseInput.focus();
+});
+
+// Bouton Modifier
+editButton.textContent = "Modifier";
+editButton.style.backgroundColor = "#f59e0b";
+editButton.style.color = "#ffffff";
+editButton.style.marginRight = "8px";
+editButton.title = "Modifier cette dépense";
+        
+
+deleteButton.addEventListener("click", function () {
+    const confirmation = confirm(
+        "Voulez-vous vraiment supprimer cette dépense ?"
+    );
+
+    if (!confirmation) {
+        return;
+    }
+
+    expenses.splice(expenses.indexOf(expense), 1);
+
+    localStorage.setItem(
+        "expenses",
+        JSON.stringify(expenses)
+    );
+
+    displayExpenses();
+});
+
+
+
+        item.appendChild(editButton);
+        item.appendChild(deleteButton);
+        expenseList.appendChild(item);
+    });
+
+    // Étape 9.4 : afficher un message si aucune dépense n'est trouvée
+    if (expenseList.children.length === 0) {
+        const message = document.createElement("li");
+
+        message.textContent = "Aucune dépense trouvée.";
+        message.style.justifyContent = "center";
+        message.style.color = "#64748b";
+        message.style.borderLeft = "5px solid #94a3b8";
+
+        expenseList.appendChild(message);
+    }
+
+    // Étape 9.5 : afficher le nombre de résultats
+searchResultsCount.textContent =
+    "Nombre de résultats : " + displayedCount;
+
+// Étape 12.2 : afficher un message selon les résultats
+if (displayedCount === 0) {
+    filterResultsMessage.textContent =
+        "Aucune dépense ne correspond à vos filtres.";
+    filterResultsMessage.style.color = "#dc2626";
+} else {
+    filterResultsMessage.textContent =
+        "Les dépenses correspondantes sont affichées.";
+    filterResultsMessage.style.color = "#16a34a";
+}
+}
+
+categoryFilter.addEventListener("change", function () {
+    displayExpenses();
+});
+searchInput.addEventListener("input", function () {
+    displayExpenses();
+});
+clearSearchButton.addEventListener("click", function () {
+    searchInput.value = "";
+    displayExpenses();
+});
+
+ // Étape 10.2 : réinitialiser tous les filtres
+resetFiltersButton.addEventListener("click", function () {
+    searchInput.value = "";
+    categoryFilter.value = "Toutes";
+    startDateInput.value = "";
+    endDateInput.value = "";
+
+    displayExpenses();
+});
+
+
+filterByDateButton.addEventListener("click", function () {
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+
+    if (startDate && endDate && startDate > endDate) {
+        alert("La date de début doit être avant ou égale à la date de fin.");
+        return;
+    }
+
+    displayExpenses();
+});
+
+clearDateFilterButton.addEventListener("click", function () {
+    startDateInput.value = "";
+    endDateInput.value = "";
+    displayExpenses();
+});
+
+budgetInput.value = budget > 0 ? budget : "";
+
+saveBudgetButton.addEventListener("click", function () {
+    const newBudget = Number(budgetInput.value);
+
+    
+if (budgetInput.value.trim() === "") {
+    alert("Veuillez saisir votre budget mensuel.");
+    budgetInput.focus();
+    return;
+}
+
+if (!Number.isFinite(newBudget) || newBudget <= 0) {
+    alert("Le budget doit être un nombre supérieur à 0 DH.");
+    budgetInput.focus();
+    return;
+}
+
+
+    budget = newBudget;
+
+    localStorage.setItem("monthlyBudget", budget);
+
+    displayExpenses();
+
+    alert("Budget enregistré avec succès !");
+});
+
+    addButton.addEventListener("click", function () {
+        const name = expenseInput.value.trim();
+        const amount = Number(amountInput.value);
+        
+if (
+    name === "" ||
+    amountInput.value.trim() === "" ||
+    !Number.isFinite(amount) ||
+    amount <= 0
+) {
+    alert("Veuillez saisir un nom et un montant valide supérieur à 0 DH.");
+    return;
+}
+
+      
+if (editingExpense !== null) {
+    const selectedDate = expenseDateInput.value;
+
+    if (selectedDate === "") {
+        alert("Veuillez choisir la date de la dépense.");
+        expenseDateInput.focus();
+        return;
+    }
+
+    expenses[editingExpense] = {
+        ...expenses[editingExpense],
+        name: name,
+        amount: amount,
+        category: categoryInput.value,
+        date: selectedDate
+    };
+
+    editingExpense = null;
+    addButton.textContent = "Ajouter la dépense";
+    cancelEditButton.style.display = "none";
+} else {
+    const selectedDate = expenseDateInput.value;
+
+if (selectedDate === "") {
+    alert("Veuillez choisir la date de la dépense.");
+    expenseDateInput.focus();
+    return;
+}
+
+expenses.push({
+    name: name,
+    amount: amount,
+    category: categoryInput.value,
+    date: selectedDate
+});
+}
+
+localStorage.setItem("expenses", JSON.stringify(expenses));
+
+displayExpenses();
+
+expenseInput.value = "";
+amountInput.value = "";
+expenseDateInput.value = "";
+categoryInput.value = "Alimentation";
+
+    });
+    cancelEditButton.addEventListener("click", function () {
+    editingExpense = null;
+
+    expenseInput.value = "";
+    amountInput.value = "";
+    expenseDateInput.value = "";
+    categoryInput.value = "Alimentation";
+
+    addButton.textContent = "Ajouter la dépense";
+    cancelEditButton.style.display = "none";
+});
+    displayExpenses();
+    document.getElementById("export-expenses").addEventListener("click", function () {
+        const confirmation = confirm(
+    "Voulez-vous exporter vos dépenses dans un fichier CSV ?"
+);
+
+if (!confirmation) {
+    return;
+}
+    if (expenses.length === 0) {
+        alert("Aucune dépense à exporter.");
+        return;
+    }
+
+    let csv = "\uFEFFNom;Montant (DH);Catégorie;Date\n";
+
+    
+expenses.forEach(function (expense) {
+    let name = String(expense.name || "").replace(/"/g, '""');
+    let category = String(expense.category || "").replace(/"/g, '""');
+    let date = expense.date || "Date non disponible";
+
+    csv += `"${name}";${expense.amount};"${category}";"${date}"\n`;
+});
+
+
+    let blob = new Blob([csv], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    let url = URL.createObjectURL(blob);
+    let link = document.createElement("a");
+
+    link.href = url;
+    link.download = "mes-depenses-" +
+    new Date().toISOString().split("T")[0] + ".csv";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+});
+
+document.getElementById("print-expenses").addEventListener("click", function () {
+    const confirmation = confirm(
+        "Voulez-vous imprimer la liste de vos dépenses ?"
+    );
+
+    if (!confirmation) {
+        return;
+    }
+
+    window.print();
+});
+
+document.getElementById("back-to-top").addEventListener("click", function () {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+
+</script>
+
+</body>
+</html>
